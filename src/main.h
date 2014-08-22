@@ -53,6 +53,8 @@ static const int fHaveUPnP = false;
 #endif
 
 static const uint256 CheckBlock1 ("0000000000de57f302cf24938087273e419e1204913bd8683697e68be143f818"); // Checkpoint at block 1000
+static const uint256 CheckBlock2 ("0000000001e7721237843466908080148eda23e67f70fca89faccf8c017f99da"); // Checkpoint at block 6500
+
 
 static const uint256 hashGenesisBlock("00000b17e3a241903ee4b5be429ce0d3f5097312a7b9ab093cc172aece0943a5");
 static const uint256 hashGenesisBlockTestNet("00000b17e3a241903ee4b5be429ce0d3f5097312a7b9ab093cc172aece0943a5");

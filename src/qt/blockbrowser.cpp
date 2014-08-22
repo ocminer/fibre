@@ -51,8 +51,8 @@ const CBlockIndex* getBlockIndex(int height)
 
 std::string getBlockHash(int Height)
 {
-    if(Height > pindexBest->nHeight) { return "0x00000f6c6338e360ab0db701546950c1a199dd7b1d040b257e5f974522173c0d"; }
-    if(Height < 0) { return "0x00000f6c6338e360ab0db701546950c1a199dd7b1d040b257e5f974522173c0d"; }
+    if(Height > pindexBest->nHeight) { return "0x00000b17e3a241903ee4b5be429ce0d3f5097312a7b9ab093cc172aece0943a5"; }
+    if(Height < 0) { return "0x00000b17e3a241903ee4b5be429ce0d3f5097312a7b9ab093cc172aece0943a5"; }
     int desiredheight;
     desiredheight = Height;
     if (desiredheight < 0 || desiredheight > nBestHeight)
@@ -161,7 +161,7 @@ double getTxTotalValue(std::string txid)
     CTransaction tx;
     uint256 hashBlock = 0;
     if (!GetTransaction(hash, tx, hashBlock))
-        return 505;
+        return 25;
 
     CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
     ssTx << tx;
@@ -377,6 +377,7 @@ void BlockBrowser::updateExplorer(bool block)
         QString QPawrate = QString::number(Pawrate2, 'f', 3);
         ui->heightLabel->setText(QHeight);
         ui->hashBox->setText(QHash);
+        ui->txBox->setText(QHash);
         ui->merkleBox->setText(QMerkle);
         ui->bitsBox->setText(QBits);
         ui->nonceBox->setText(QNonce);

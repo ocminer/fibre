@@ -15,6 +15,7 @@ class SignVerifyMessageDialog;
 class Notificator;
 class RPCConsole;
 
+class BlockBrowser;
 QT_BEGIN_NAMESPACE
 class QLabel;
 class QLineEdit;
@@ -57,6 +58,7 @@ private:
     ClientModel *clientModel;
     WalletModel *walletModel;
 
+    BlockBrowser *blockBrowser;
     QStackedWidget *centralWidget;
 
     OverviewPage *overviewPage;
@@ -74,6 +76,7 @@ private:
     QProgressBar *progressBar;
 
     QMenuBar *appMenuBar;
+    QAction *blockAction;
     QAction *overviewAction;
     QAction *historyAction;
     QAction *quitAction;
@@ -138,6 +141,7 @@ public slots:
 private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    void gotoBlockBrowser();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */

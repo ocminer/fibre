@@ -54,6 +54,9 @@
         <file alias="Wallet_Logo">res/images/Wallet_Logo.png</file>
         <file alias="Small_logo">res/images/64x64.png</file>
         <file alias="Logo_256x256">res/images/256x256.png</file>
+        <file alias="Inverted_Logo_256x210">res/images/256x210.png</file>
+        <file alias="Inverted_Logo_128x110">res/images/128x110_inverted.png</file>
+        <file alias="Small_logo_inverted">res/images/64x53_inverted.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="update_spinner">res/movies/update_spinner.mng</file>

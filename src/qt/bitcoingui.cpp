@@ -19,6 +19,7 @@
 #include "addresstablemodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
+#include "blockbrowser.h"
 #include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "askpassphrasedialog.h"
@@ -78,7 +79,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     notificator(0),
     rpcConsole(0)
 {
-    resize(850, 550);
+    resize(900, 550);
     setWindowTitle(tr("Fibre") + " - " +("Currency"));
 
 
@@ -106,15 +107,15 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     // Create the tray icon (or setup the dock icon)
     createTrayIcon();
     QPalette p;
-//    p.setColor(QPalette::Window, QColor(0x22, 0x22, 0x22));
-//    p.setColor(QPalette::Button, QColor(0x22, 0x22, 0x22));
-//    p.setColor(QPalette::Mid, QColor(0x22, 0x22, 0x22));
-//    p.setColor(QPalette::Base, QColor(0x22, 0x22, 0x22));
-//    p.setColor(QPalette::AlternateBase, QColor(0x22, 0x22, 0x22));
-//    setPalette(p);
-//    QFile style(":/styles/res/styles/style.qss");
-//    style.open(QFile::ReadOnly);
-//    setStyleSheet(QString::fromUtf8(style.readAll()));
+    p.setColor(QPalette::Window, QColor(0x22, 0x22, 0x22));
+    p.setColor(QPalette::Button, QColor(0x22, 0x22, 0x22));
+    p.setColor(QPalette::Mid, QColor(0x22, 0x22, 0x22));
+    p.setColor(QPalette::Base, QColor(0x22, 0x22, 0x22));
+    p.setColor(QPalette::AlternateBase, QColor(0x22, 0x22, 0x22));
+    setPalette(p);
+    QFile style(":/styles/res/styles/style.qss");
+    style.open(QFile::ReadOnly);
+    setStyleSheet(QString::fromUtf8(style.readAll()));
 
     /* don't override the background color of the toolbar on mac os x due to
        the whole component it resides on not being paintable
@@ -126,6 +127,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     // Create tabs
     overviewPage = new OverviewPage();
 
+    blockBrowser = new BlockBrowser(this);
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
     transactionView = new TransactionView(this);
@@ -143,6 +145,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     centralWidget = new QStackedWidget(this);
     centralWidget->setObjectName("central");
     centralWidget->addWidget(overviewPage);
+    centralWidget->addWidget(blockBrowser);
     centralWidget->addWidget(transactionsPage);
     centralWidget->addWidget(addressBookPage);
     centralWidget->addWidget(receiveCoinsPage);
@@ -267,6 +270,13 @@ void BitcoinGUI::createActions()
     addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabGroup->addAction(addressBookAction);
 
+    blockAction = new QAction(QIcon(":/icons/block"), tr("&Block Explorer"), this);
+    blockAction->setToolTip(tr("Explore the BlockChain"));
+    blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+    blockAction->setCheckable(true);
+    tabGroup->addAction(blockAction);
+    connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
+    connect(blockAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -373,6 +383,7 @@ void BitcoinGUI::createToolBars(QToolBar* toolbar)
     toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(historyAction);
     toolbar->addAction(addressBookAction);
+	toolbar->addAction(blockAction);
     toolbar->addAction(exportAction);
 
 //    QToolBar *toolbar2 = addToolBar(tr("Actions toolbar"));
@@ -737,6 +748,14 @@ void BitcoinGUI::gotoOverviewPage()
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
 }
 
+void BitcoinGUI::gotoBlockBrowser()
+{
+    blockAction->setChecked(true);
+    centralWidget->setCurrentWidget(blockBrowser);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+}
 void BitcoinGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
