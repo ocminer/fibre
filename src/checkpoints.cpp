@@ -27,7 +27,8 @@ namespace Checkpoints
         ( 0, hashGenesisBlock )
         ( 1000, CheckBlock1 )
         ( 6500, CheckBlock2 )
-    ;
+        ( 10000, CheckBlock3 )
+            ;
 
     // TestNet has no checkpoints
     static MapCheckpoints mapCheckpointsTestnet =

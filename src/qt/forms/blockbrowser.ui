@@ -350,7 +350,7 @@ QTabWidget {
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Click here to decode the block information&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>Decode Transaction</string>
+          <string>TX &amp; Block Information</string>
          </property>
          <property name="autoDefault">
           <bool>true</bool>
@@ -369,16 +369,6 @@ QTabWidget {
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="17" column="0">
-        <widget class="QLabel" name="inputLabel">
-         <property name="text">
-          <string>Inputs:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-        </widget>
        </item>
        <item row="10" column="1">
         <widget class="QLabel" name="pawBox">
@@ -537,16 +527,6 @@ QTabWidget {
          </property>
          <property name="text">
           <string>0x0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="0">
-        <widget class="QLabel" name="outputLabel">
-         <property name="text">
-          <string>Outputs:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
          </property>
         </widget>
        </item>
