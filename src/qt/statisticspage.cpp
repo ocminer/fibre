@@ -42,7 +42,7 @@ void StatisticsPage::updateStatistics()
     int pPawrate = GetPoWMHashPS();
     double pPawrate2 = 0.000;
     int nHeight = pindexBest->nHeight;
-    double nSubsidy = 100;
+    double nSubsidy = 25;
     uint64_t nMinWeight = 0, nMaxWeight = 0, nWeight = 0;
     pwalletMain->GetStakeWeight(*pwalletMain, nMinWeight, nMaxWeight, nWeight);
     uint64_t nNetworkWeight = GetPoSKernelPS();
@@ -113,7 +113,7 @@ void StatisticsPage::updateStatistics()
     
     if(pHardness > hardnessPrevious)
     {
-        ui->diffBox->setText("<b><font color=\"green\">" + hardness + "</font></b>");        
+        ui->diffBox->setText("<b><font color=\"orange\">" + hardness + "</font></b>");        
     } else if(pHardness < hardnessPrevious) {
         ui->diffBox->setText("<b><font color=\"red\">" + hardness + "</font></b>");
     } else {
@@ -122,7 +122,7 @@ void StatisticsPage::updateStatistics()
 
     if(pHardness2 > hardnessPrevious2)
     {
-        ui->diffBox2->setText("<b><font color=\"green\">" + hardness2 + "</font></b>");
+        ui->diffBox2->setText("<b><font color=\"orange\">" + hardness2 + "</font></b>");
     } else if(pHardness2 < hardnessPrevious2) {
         ui->diffBox2->setText("<b><font color=\"red\">" + hardness2 + "</font></b>");
     } else {
@@ -131,7 +131,7 @@ void StatisticsPage::updateStatistics()
     
     if(pPawrate2 > netPawratePrevious)
     {
-        ui->pawrateBox->setText("<b><font color=\"green\">" + pawrate + " MH/s</font></b>");
+        ui->pawrateBox->setText("<b><font color=\"orange\">" + pawrate + " MH/s</font></b>");
     } else if(pPawrate2 < netPawratePrevious) {
         ui->pawrateBox->setText("<b><font color=\"red\">" + pawrate + " MH/s</font></b>");
     } else {
@@ -140,14 +140,14 @@ void StatisticsPage::updateStatistics()
 
     if(Qlpawrate != pawratePrevious)
     {
-        ui->localBox->setText("<b><font color=\"green\">" + Qlpawrate + "</font></b>");
+        ui->localBox->setText("<b><font color=\"orange\">" + Qlpawrate + "</font></b>");
     } else {
     ui->localBox->setText(Qlpawrate);
     }
     
     if(peers > connectionPrevious)
     {
-        ui->connectionBox->setText("<b><font color=\"green\">" + QPeers + "</font></b>");             
+        ui->connectionBox->setText("<b><font color=\"orange\">" + QPeers + "</font></b>");             
     } else if(peers < connectionPrevious) {
         ui->connectionBox->setText("<b><font color=\"red\">" + QPeers + "</font></b>");        
     } else {
@@ -156,7 +156,7 @@ void StatisticsPage::updateStatistics()
 
     if(volume > volumePrevious)
     {
-        ui->volumeBox->setText("<b><font color=\"green\">" + qVolume + " FIBRE" + "</font></b>");
+        ui->volumeBox->setText("<b><font color=\"orange\">" + qVolume + " FIBRE" + "</font></b>");
     } else if(volume < volumePrevious) {
         ui->volumeBox->setText("<b><font color=\"red\">" + qVolume + " FIBRE" + "</font></b>");
     } else {

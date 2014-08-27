@@ -45,9 +45,9 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("M")+("a")+("i")+("a")+("C")+("o")+("i")+("n") +("s");
-    case mBTC: return QString("Milli-") + ("M")+("a")+("i")+("a") + ("1 / 1,000)");
-    case uBTC: return QString("Micro-") + ("M")+("a")+("i")+("a") + ("1 / 1,000,000)");
+    case BTC: return QString("FIBRE");
+    case mBTC: return QString("Milli-FIBRE ") + ("1 / 1,000)");
+    case uBTC: return QString("Micro-FIBRE ") + ("1 / 1,000,000)");
     default: return QString("???");
     }
 }

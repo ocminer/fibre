@@ -306,6 +306,20 @@ static const CRPCCommand vRPCCommands[] =
     { "resendtx",               &resendtx,               false,  true},
     { "makekeypair",            &makekeypair,            false,  true},
     { "sendalert",              &sendalert,              false,  false},
+	
+    { "fcenable",             &fcenable,             false,  false},
+    { "fcdisable",            &fcdisable,            false,  false},
+    { "fclocalkeys",          &fclocalkeys,          false,  false},
+    { "fcoptions",            &fcoptions,            false,  false},
+    { "fcscanchain",          &fcscanchain,          false,  false},
+    { "fcscanbuckets",        &fcscanbuckets,        false,  false},
+    { "fcaddkey",             &fcaddkey,             false,  false},
+    { "fcgetpubkey",          &fcgetpubkey,          false,  false},
+    { "fcsend",               &fcsend,               false,  false},
+    { "srvnotify",            &srvnotify,            false,  false},
+    { "fcinbox",              &fcinbox,              false,  false},
+    { "fcoutbox",             &fcoutbox,             false,  false},
+    { "fcbuckets",            &fcbuckets,            false,  false},
 };
 
 CRPCTable::CRPCTable()

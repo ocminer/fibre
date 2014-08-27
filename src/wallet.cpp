@@ -134,6 +134,9 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
             if (CCryptoKeyStore::Unlock(vMasterKey))
                 return true;
         }
+
+        SecureMsgWalletUnlocked();
+        return true;
     }
     return false;
 }
@@ -1895,7 +1898,7 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 }
 
 
-bool CWallet::SetAddressBookName(const CTxDestination& address, const string& strName)
+/*bool CWallet::SetAddressBookName(const CTxDestination& address, const string& strName)
 {
     std::map<CTxDestination, std::string>::iterator mi = mapAddressBook.find(address);
     mapAddressBook[address] = strName;
@@ -1909,6 +1912,53 @@ bool CWallet::DelAddressBookName(const CTxDestination& address)
 {
     mapAddressBook.erase(address);
     NotifyAddressBookChanged(this, address, "", ::IsMine(*this, address), CT_DELETED);
+    if (!fFileBacked)
+        return false;
+    return CWalletDB(strWalletFile).EraseName(CBitcoinAddress(address).ToString());
+}*/
+
+bool CWallet::SetAddressBookName(const CTxDestination& address, const string& strName)
+{
+    bool fOwned;
+    ChangeType nMode;
+    {
+        LOCK(cs_wallet); // mapAddressBook
+        std::map<CTxDestination, std::string>::iterator mi = mapAddressBook.find(address);
+        nMode = (mi == mapAddressBook.end()) ? CT_NEW : CT_UPDATED;
+        fOwned = ::IsMine(*this, address);
+        
+        mapAddressBook[address] = strName;
+    }
+    
+    if (fOwned)
+    {
+        const CBitcoinAddress& caddress = address;
+        SecureMsgWalletKeyChanged(caddress.ToString(), strName, nMode);
+    }
+    NotifyAddressBookChanged(this, address, strName, fOwned, nMode);
+    
+    if (!fFileBacked)
+        return false;
+    return CWalletDB(strWalletFile).WriteName(CBitcoinAddress(address).ToString(), strName);
+}
+
+bool CWallet::DelAddressBookName(const CTxDestination& address)
+{
+    {
+        LOCK(cs_wallet); // mapAddressBook
+
+        mapAddressBook.erase(address);
+    }
+    
+    bool fOwned = ::IsMine(*this, address);
+    string sName = "";
+    if (fOwned)
+    {
+        const CBitcoinAddress& caddress = address;
+        SecureMsgWalletKeyChanged(caddress.ToString(), sName, CT_DELETED);
+    }
+    NotifyAddressBookChanged(this, address, "", fOwned, CT_DELETED);
+
     if (!fFileBacked)
         return false;
     return CWalletDB(strWalletFile).EraseName(CBitcoinAddress(address).ToString());

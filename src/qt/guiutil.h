@@ -112,6 +112,7 @@ namespace GUIUtil
     private:
         QString header;
         QString coreOptions;
+        QString FibreConnectOptions;
         QString uiOptions;
     };
 

@@ -1,7 +1,12 @@
 TEMPLATE = app
 TARGET = Fibre-qt
-VERSION = 1.1.0.1
-INCLUDEPATH += src src/json src/qt
+VERSION = 1.2.0.2
+INCLUDEPATH += src src/json \
+    src/qt \
+    src/tor \
+    src/qt/plugins/mrichtexteditor \
+    src/xxhash \
+    src/lz4
 QT += core gui network
 DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE
 CONFIG += no_include_pwd
@@ -18,9 +23,16 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 win32 {
     LIBS += -lshlwapi
     LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
-    LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
+    LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX -lz -levent -lcrypt32
     LIBS += -lws2_32 -lole32 -loleaut32 -luuid -lgdi32
     LIBS += -lboost_system-mgw48-mt-s-1_55 -lboost_filesystem-mgw48-mt-s-1_55 -lboost_program_options-mgw48-mt-s-1_55 -lboost_thread-mgw48-mt-s-1_55
+    LIBS += -L"C:/deps/MinGW/msys/1.0/local/lib"
+    LIBS += -L"C:/deps/libcommuni-3.2.0/lib"
+
+    INCLUDEPATH += "C:/deps/MinGW/msys/1.0/local/include"
+    INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcCore"
+    INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcModel"
+    INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcUtil"
 
     BOOST_LIB_SUFFIX=-mgw48-mt-s-1_55
     BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
@@ -134,8 +146,88 @@ SOURCES += src/blake.c \
     src/keccak.c \
     src/skein.c 
 	
+### tor sources
+SOURCES +=     src/tor/address.c \
+    src/tor/addressmap.c \
+    src/tor/aes.c \
+    src/tor/backtrace.c \
+    src/tor/buffers.c \
+    src/tor/channel.c \
+    src/tor/channeltls.c \
+    src/tor/circpathbias.c \
+    src/tor/circuitbuild.c \
+    src/tor/circuitlist.c \
+    src/tor/circuitmux.c \
+    src/tor/circuitmux_ewma.c \
+    src/tor/circuitstats.c \
+    src/tor/circuituse.c \
+    src/tor/command.c \
+    src/tor/compat.c \
+    src/tor/compat_libevent.c \
+    src/tor/config.c \
+    src/tor/config_codedigest.c \
+    src/tor/confparse.c \
+    src/tor/connection.c \
+    src/tor/connection_edge.c \
+    src/tor/connection_or.c \
+    src/tor/container.c \
+    src/tor/control.c \
+    src/tor/cpuworker.c \
+    src/tor/crypto.c \
+    src/tor/crypto_curve25519.c \
+    src/tor/crypto_format.c \
+    src/tor/curve25519-donna.c \
+    src/tor/di_ops.c \
+    src/tor/directory.c \
+    src/tor/dirserv.c \
+    src/tor/dirvote.c \
+    src/tor/dns.c \
+    src/tor/dnsserv.c \
+    src/tor/entrynodes.c \
+    src/tor/ext_orport.c \
+    src/tor/fp_pair.c \
+    src/tor/geoip.c \
+    src/tor/hibernate.c \
+    src/tor/log.c \
+    src/tor/memarea.c \
+    src/tor/mempool.c \
+    src/tor/microdesc.c \
+    src/tor/networkstatus.c \
+    src/tor/nodelist.c \
+    src/tor/onion.c \
+    src/tor/onion_fast.c \
+    src/tor/onion_main.c \
+    src/tor/onion_ntor.c \
+    src/tor/onion_tap.c \
+    src/tor/policies.c \
+    src/tor/anonymize.cpp \
+    src/tor/procmon.c \
+    src/tor/reasons.c \
+    src/tor/relay.c \
+    src/tor/rendclient.c \
+    src/tor/rendcommon.c \
+    src/tor/rendmid.c \
+    src/tor/rendservice.c \
+    src/tor/rephist.c \
+    src/tor/replaycache.c \
+    src/tor/router.c \
+    src/tor/routerlist.c \
+    src/tor/routerparse.c \
+    src/tor/routerset.c \
+    src/tor/sandbox.c \
+    src/tor/statefile.c \
+    src/tor/status.c \
+    src/tor/strlcat.c \
+    src/tor/strlcpy.c \
+    src/tor/tor_util.c \
+    src/tor/torgzip.c \
+    src/tor/tortls.c \
+    src/tor/transports.c \
+    src/tor/util_codedigest.c
 
-
+##encryption + compression sources
+SOURCES +=  src/lz4/lz4.c \
+    src/xxhash/xxhash.c
 
 !win32 {
     # we use QMAKE_CXXFLAGS_RELEASE even without RELEASE=1 because we use RELEASE to indicate linking preferences not -O preferences
@@ -197,7 +289,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/editaddressdialog.h \
     src/qt/bitcoinaddressvalidator.h \
     src/qt/blockbrowser.h \
-#    src/qt/statisticspage.h \
+    src/qt/statisticspage.h \
     src/alert.h \
     src/addrman.h \
     src/base58.h \
@@ -205,6 +297,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/checkpoints.h \
     src/compat.h \
     src/coincontrol.h \
+    src/smessage.h \
     src/sync.h \
     src/util.h \
     src/uint256.h \
@@ -263,6 +356,12 @@ HEADERS += src/qt/bitcoingui.h \
     src/allocators.h \
     src/ui_interface.h \
     src/qt/rpcconsole.h \
+    src/qt/messagepage.h \
+    src/qt/messagemodel.h \
+    src/qt/sendmessagesdialog.h \
+    src/qt/sendmessagesentry.h \
+    src/qt/plugins/mrichtexteditor/mrichtextedit.h \
+    src/qt/qvalidatedtextedit.h \
     src/version.h \
     src/netbase.h \
     src/clientversion.h \
@@ -281,9 +380,10 @@ HEADERS += src/sph_blake.h \
     src/sph_keccak.h \
     src/sph_skein.h \
     src/sph_types.h 
-
 	
-
+##encryption + compression headers
+HEADERS +=  src/lz4/lz4.h \
+    src/xxhash/xxhash.h
 
 
 SOURCES += src/qt/bitcoin.cpp \
@@ -300,7 +400,13 @@ SOURCES += src/qt/bitcoin.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
     src/qt/blockbrowser.cpp \
-#    src/qt/statisticspage.cpp \
+    src/qt/statisticspage.cpp \
+    src/qt/messagepage.cpp \
+    src/qt/messagemodel.cpp \
+    src/qt/sendmessagesdialog.cpp \
+    src/qt/sendmessagesentry.cpp \
+    src/qt/qvalidatedtextedit.cpp \
+    src/qt/plugins/mrichtexteditor/mrichtextedit.cpp \
     src/alert.cpp \
     src/version.cpp \
     src/sync.cpp \
@@ -309,6 +415,7 @@ SOURCES += src/qt/bitcoin.cpp \
     src/key.cpp \
     src/script.cpp \
     src/main.cpp \
+    src/smessage.cpp \
     src/miner.cpp \
     src/init.cpp \
     src/net.cpp \
@@ -338,6 +445,7 @@ SOURCES += src/qt/bitcoin.cpp \
     src/rpcwallet.cpp \
     src/rpcblockchain.cpp \
     src/rpcrawtransaction.cpp \
+    src/rpcsmessage.cpp \
     src/qt/overviewpage.cpp \
     src/qt/csvmodelwriter.cpp \
     src/crypter.cpp \
@@ -357,7 +465,9 @@ SOURCES += src/qt/bitcoin.cpp \
     src/scrypt-x86_64.S \
     src/scrypt.cpp \
     src/pbkdf2.cpp \
-    src/txdb-leveldb.cpp
+    src/txdb-leveldb.cpp \
+    src/json/json_spirit_reader.cpp \
+    src/json/json_spirit_writer.cpp
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -375,9 +485,12 @@ FORMS += \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
     src/qt/forms/optionsdialog.ui \
-    src/qt/forms/blockbrowser.ui
-#    src/qt/forms/statisticspage.ui \
-
+    src/qt/forms/blockbrowser.ui \
+    src/qt/forms/statisticspage.ui \
+    src/qt/forms/messagepage.ui \
+    src/qt/forms/sendmessagesentry.ui \
+    src/qt/forms/sendmessagesdialog.ui \
+    src/qt/plugins/mrichtexteditor/mrichtextedit.ui
 
 contains(USE_QRCODE, 1) {
 HEADERS += src/qt/qrcodedialog.h

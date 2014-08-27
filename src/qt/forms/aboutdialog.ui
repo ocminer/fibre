@@ -285,7 +285,7 @@ QTabWidget {
           <cursorShape>IBeamCursor</cursorShape>
          </property>
          <property name="text">
-          <string notr="true">0.3.666-beta</string>
+          <string notr="true">1.2.0.x</string>
          </property>
          <property name="textInteractionFlags">
           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -323,7 +323,7 @@ QTabWidget {
      <item>
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Fibre Specifications:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type&lt;/span&gt;: Proof of Work (PoW) + Proof of Stake (PoS) hybrid.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Algorithm&lt;/span&gt;: Nist5&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Phase duration:&lt;/span&gt; PoW lasts about 20 days as a method of distribution&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Estimated Total coins:&lt;/span&gt; 1,000,000&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Annual interest for Staked coins:&lt;/span&gt; 5%&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Minimum coin stake age:&lt;/span&gt; 12 hours&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Block creation time: &lt;/span&gt;60 seconds&lt;br/&gt;&lt;/p&gt;&lt;p&gt;More detailed specifications can be found on our website&lt;br/&gt;&lt;span style=&quot; font-weight:600; color:#e86941;&quot;&gt;http://worldfibre.net&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Fibre Specifications:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type&lt;/span&gt;: Proof of Work (PoW) + Proof of Stake (PoS) hybrid.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Algorithm&lt;/span&gt;: Nist5&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Phase duration:&lt;/span&gt; PoW lasts about 20 days as a method of distribution&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Estimated Total coins:&lt;/span&gt; 1,000,000&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Annual interest for Staked coins:&lt;/span&gt; 5%&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Minimum coin stake age:&lt;/span&gt; 12 hours&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Block creation time: &lt;/span&gt;60 seconds&lt;br/&gt;&lt;/p&gt;&lt;p&gt;More detailed specifications can be found on our website&lt;br/&gt;&lt;a href=&quot;http://fibrecoin.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e86941;&quot;&gt;http://fibrecoin.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>

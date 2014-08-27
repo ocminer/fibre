@@ -8,18 +8,22 @@
 #include "transactiontablemodel.h"
 #include "addressbookpage.h"
 #include "sendcoinsdialog.h"
+#include "sendmessagesdialog.h"
 #include "signverifymessagedialog.h"
 #include "optionsdialog.h"
 #include "aboutdialog.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
+#include "messagemodel.h"
 #include "editaddressdialog.h"
 #include "optionsmodel.h"
 #include "transactiondescdialog.h"
 #include "addresstablemodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
+#include "statisticspage.h"
 #include "blockbrowser.h"
+#include "messagepage.h"
 #include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "askpassphrasedialog.h"
@@ -58,6 +62,9 @@
 #include <QDragEnterEvent>
 #include <QUrl>
 #include <QStyle>
+#include <QStyleFactory>
+#include <QTextStream>
+#include <QTextDocument>
 
 #include <iostream>
 
@@ -70,6 +77,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     QMainWindow(parent),
     clientModel(0),
     walletModel(0),
+    messageModel(0),
     encryptWalletAction(0),
     changePassphraseAction(0),
     unlockWalletAction(0),
@@ -79,7 +87,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     notificator(0),
     rpcConsole(0)
 {
-    resize(900, 550);
+    resize(1050, 600);
     setWindowTitle(tr("Fibre") + " - " +("Currency"));
 
 
@@ -126,8 +134,10 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 
     // Create tabs
     overviewPage = new OverviewPage();
+	statisticsPage = new StatisticsPage(this);
+	blockBrowser = new BlockBrowser(this);
+	messagePage   = new MessagePage(this);
 
-    blockBrowser = new BlockBrowser(this);
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
     transactionView = new TransactionView(this);
@@ -145,7 +155,9 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     centralWidget = new QStackedWidget(this);
     centralWidget->setObjectName("central");
     centralWidget->addWidget(overviewPage);
-    centralWidget->addWidget(blockBrowser);
+	centralWidget->addWidget(statisticsPage);
+	centralWidget->addWidget(blockBrowser);
+	centralWidget->addWidget(messagePage);
     centralWidget->addWidget(transactionsPage);
     centralWidget->addWidget(addressBookPage);
     centralWidget->addWidget(receiveCoinsPage);
@@ -246,6 +258,18 @@ void BitcoinGUI::createActions()
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
     tabGroup->addAction(overviewAction);
 
+    statisticsAction = new QAction(QIcon(":/icons/statistics"), tr("&Statistics"), this);
+    statisticsAction->setToolTip(tr("View statistics"));
+    statisticsAction->setCheckable(true);
+    statisticsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
+    tabGroup->addAction(statisticsAction);
+	
+    messageAction = new QAction(QIcon(":/icons/messaging"), tr("&Fibre Connect ©"), this);
+    messageAction->setToolTip(tr("Fibre Connect© Encrypted messages"));
+    messageAction->setCheckable(true);
+    messageAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_7));
+    tabGroup->addAction(messageAction);
+
     sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send coins"), this);
     sendCoinsAction->setToolTip(tr("Send coins to a Fibre address"));
     sendCoinsAction->setCheckable(true);
@@ -279,6 +303,8 @@ void BitcoinGUI::createActions()
     connect(blockAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
+    connect(statisticsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(statisticsAction, SIGNAL(triggered()), this, SLOT(gotoStatisticsPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -287,6 +313,8 @@ void BitcoinGUI::createActions()
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));
+	connect(messageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(messageAction, SIGNAL(triggered()), this, SLOT(gotoMessagePage()));
 
     quitAction = new QAction(QIcon(":/icons/quit"), tr("&Exit"), this);
     quitAction->setToolTip(tr("Quit application"));
@@ -359,6 +387,16 @@ void BitcoinGUI::createMenuBar()
     file->addSeparator();
     file->addAction(quitAction);
 
+    QMenu *menu = appMenuBar->addMenu(tr("&Menu"));
+    menu->addAction(overviewAction);
+    menu->addAction(sendCoinsAction);
+    menu->addAction(receiveCoinsAction);
+    menu->addAction(messageAction);
+    menu->addAction(historyAction);
+    menu->addAction(addressBookAction);
+    menu->addAction(blockAction);
+    menu->addAction(statisticsAction);
+
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
     settings->addAction(encryptWalletAction);
     settings->addAction(changePassphraseAction);
@@ -381,10 +419,13 @@ void BitcoinGUI::createToolBars(QToolBar* toolbar)
     toolbar->addAction(overviewAction);
     toolbar->addAction(sendCoinsAction);
     toolbar->addAction(receiveCoinsAction);
+    toolbar->addAction(messageAction);
     toolbar->addAction(historyAction);
     toolbar->addAction(addressBookAction);
-	toolbar->addAction(blockAction);
-    toolbar->addAction(exportAction);
+    toolbar->addAction(blockAction);
+    toolbar->addAction(statisticsAction);
+
+//    toolbar->addAction(exportAction);
 
 //    QToolBar *toolbar2 = addToolBar(tr("Actions toolbar"));
 //    toolbar2->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -448,6 +489,8 @@ void BitcoinGUI::setWalletModel(WalletModel *walletModel)
         receiveCoinsPage->setModel(walletModel->getAddressTableModel());
         sendCoinsPage->setModel(walletModel);
         signVerifyMessageDialog->setModel(walletModel);
+		statisticsPage->setModel(clientModel);
+		blockBrowser->setModel(clientModel);
 
         setEncryptionStatus(walletModel->getEncryptionStatus());
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(setEncryptionStatus(int)));
@@ -458,6 +501,23 @@ void BitcoinGUI::setWalletModel(WalletModel *walletModel)
 
         // Ask for passphrase if needed
         connect(walletModel, SIGNAL(requireUnlock()), this, SLOT(unlockWallet()));
+    }
+}
+
+void BitcoinGUI::setMessageModel(MessageModel *messageModel)
+{
+    this->messageModel = messageModel;
+    if(messageModel)
+    {
+        // Report errors from message thread
+        connect(messageModel, SIGNAL(error(QString,QString,bool)), this, SLOT(error(QString,QString,bool)));
+
+        // Put transaction list in tabs
+        messagePage->setModel(messageModel);
+
+        // Balloon pop-up for new message
+        connect(messageModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                this, SLOT(incomingMessage(QModelIndex,int,int)));
     }
 }
 
@@ -739,6 +799,35 @@ void BitcoinGUI::incomingTransaction(const QModelIndex & parent, int start, int 
     }
 }
 
+void BitcoinGUI::incomingMessage(const QModelIndex & parent, int start, int end)
+{
+    if(!messageModel)
+        return;
+
+    MessageModel *mm = messageModel;
+
+    if (mm->index(start, MessageModel::TypeInt, parent).data().toInt() == MessageTableEntry::Received)
+    {
+        QString sent_datetime = mm->index(start, MessageModel::ReceivedDateTime, parent).data().toString();
+        QString from_address  = mm->index(start, MessageModel::FromAddress,      parent).data().toString();
+        QString to_address    = mm->index(start, MessageModel::ToAddress,        parent).data().toString();
+        QString message       = mm->index(start, MessageModel::Message,          parent).data().toString();
+        QTextDocument html;
+        html.setHtml(message);
+        QString messageText(html.toPlainText());
+        notificator->notify(Notificator::Information,
+                            tr("Incoming Message"),
+                            tr("Date: %1\n"
+                               "From Address: %2\n"
+                               "To Address: %3\n"
+                               "Message: %4\n")
+                              .arg(sent_datetime)
+                              .arg(from_address)
+                              .arg(to_address)
+                              .arg(messageText));
+    };
+}
+
 void BitcoinGUI::gotoOverviewPage()
 {
     overviewAction->setChecked(true);
@@ -748,6 +837,7 @@ void BitcoinGUI::gotoOverviewPage()
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
 }
 
+
 void BitcoinGUI::gotoBlockBrowser()
 {
     blockAction->setChecked(true);
@@ -756,6 +846,26 @@ void BitcoinGUI::gotoBlockBrowser()
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
 }
+
+void BitcoinGUI::gotoStatisticsPage()
+{
+    statisticsAction->setChecked(true);
+    centralWidget->setCurrentWidget(statisticsPage);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+}
+
+void BitcoinGUI::gotoMessagePage()
+{
+    messageAction->setChecked(true);
+    centralWidget->setCurrentWidget(messagePage);
+
+    exportAction->setEnabled(true);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+    connect(exportAction, SIGNAL(triggered()), messagePage, SLOT(exportClicked()));
+}
+
 void BitcoinGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
@@ -927,7 +1037,7 @@ void BitcoinGUI::unlockWallet()
     if(walletModel->getEncryptionStatus() == WalletModel::Locked)
     {
         AskPassphraseDialog::Mode mode = sender() == unlockWalletAction ?
-              AskPassphraseDialog::UnlockStaking : AskPassphraseDialog::Unlock;
+        AskPassphraseDialog::UnlockStaking : AskPassphraseDialog::Unlock;
         AskPassphraseDialog dlg(mode, this);
         dlg.setModel(walletModel);
         dlg.exec();

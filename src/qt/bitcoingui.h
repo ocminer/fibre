@@ -7,14 +7,16 @@
 class TransactionTableModel;
 class ClientModel;
 class WalletModel;
+class MessageModel;
 class TransactionView;
 class OverviewPage;
+class MessagePage;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
 class Notificator;
 class RPCConsole;
-
+class StatisticsPage;
 class BlockBrowser;
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -47,6 +49,11 @@ public:
         functionality.
     */
     void setWalletModel(WalletModel *walletModel);
+	/** Set the message model.
+        The message model represents encryption message database, and offers access to the list of messages, address book and sending
+        functionality.
+    */
+	void setMessageModel(MessageModel *messageModel);
 
 protected:
     void changeEvent(QEvent *e);
@@ -57,10 +64,11 @@ protected:
 private:
     ClientModel *clientModel;
     WalletModel *walletModel;
-
+    StatisticsPage *statisticsPage;
     BlockBrowser *blockBrowser;
     QStackedWidget *centralWidget;
-
+	MessageModel *messageModel;
+	MessagePage *messagePage;
     OverviewPage *overviewPage;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
@@ -76,8 +84,10 @@ private:
     QProgressBar *progressBar;
 
     QMenuBar *appMenuBar;
+    QAction *statisticsAction;
     QAction *blockAction;
     QAction *overviewAction;
+	QAction *messageAction;
     QAction *historyAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
@@ -141,7 +151,12 @@ public slots:
 private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    /** Switch to statistics page*/
+    void gotoStatisticsPage();
+    /** Switch to block explorer*/
     void gotoBlockBrowser();
+	/** Switch to message page */
+    void gotoMessagePage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */
@@ -169,6 +184,13 @@ private slots:
         The new items are those between start and end inclusive, under the given parent item.
     */
     void incomingTransaction(const QModelIndex & parent, int start, int end);
+
+    /** Show incoming message notification for new messages.
+
+        The new items are those between start and end inclusive, under the given parent item.
+    */
+    void incomingMessage(const QModelIndex & parent, int start, int end);
+	
     /** Encrypt the wallet */
     void encryptWallet(bool status);
     /** Backup the wallet */

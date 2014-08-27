@@ -384,13 +384,6 @@ QTabWidget {
          </property>
         </widget>
        </item>
-       <item row="13" column="0">
-        <widget class="QLabel" name="txLabel">
-         <property name="text">
-          <string>Transaction ID:</string>
-         </property>
-        </widget>
-       </item>
        <item row="9" column="1">
         <widget class="QLabel" name="hardBox">
          <property name="text">
@@ -652,6 +645,13 @@ QTabWidget {
          </property>
          <property name="flat">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0">
+        <widget class="QLabel" name="txLabel">
+         <property name="text">
+          <string>ID:</string>
          </property>
         </widget>
        </item>

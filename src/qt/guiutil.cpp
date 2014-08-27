@@ -424,6 +424,11 @@ HelpMessageBox::HelpMessageBox(QWidget *parent) :
 
     coreOptions = QString::fromStdString(HelpMessage());
 
+    FibreConnectOptions  = tr("Fibre Connect options") + ":\n" +
+        "  -nofc                                  " + tr("Disable Fibre Connect©.") + "\n" +
+        "  -debugfc                               " + tr("Log extra debug messages.") + "\n" +
+        "  -fcscanchain                           " + tr("Scan the block chain for public key addresses on startup.") + "\n";
+
     uiOptions = tr("UI options") + ":\n" +
         "  -lang=<lang>           " + tr("Set language, for example \"de_DE\" (default: system locale)") + "\n" +
         "  -min                   " + tr("Start minimized") + "\n" +
@@ -433,7 +438,7 @@ HelpMessageBox::HelpMessageBox(QWidget *parent) :
     setTextFormat(Qt::PlainText);
     // setMinimumWidth is ignored for QMessageBox so put in non-breaking spaces to make it wider.
     setText(header + QString(QChar(0x2003)).repeated(50));
-    setDetailedText(coreOptions + "\n" + uiOptions);
+    setDetailedText(coreOptions + "\n" + uiOptions + "\n" + FibreConnectOptions);
 }
 
 void HelpMessageBox::printToConsole()

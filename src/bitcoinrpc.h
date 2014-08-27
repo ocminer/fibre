@@ -218,4 +218,18 @@ extern json_spirit::Value getblock(const json_spirit::Array& params, bool fHelp)
 extern json_spirit::Value getblockbynumber(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getcheckpoint(const json_spirit::Array& params, bool fHelp);
 
+extern json_spirit::Value fcenable(const json_spirit::Array& params, bool fHelp); // in rpcsmessage.cpp
+extern json_spirit::Value fcdisable(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fclocalkeys(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcoptions(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcscanchain(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcscanbuckets(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcaddkey(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcgetpubkey(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcsend(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value srvnotify(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcinbox(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcoutbox(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value fcbuckets(const json_spirit::Array& params, bool fHelp);
+
 #endif
