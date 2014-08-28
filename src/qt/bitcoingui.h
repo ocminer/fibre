@@ -156,7 +156,7 @@ private slots:
     /** Switch to block explorer*/
     void gotoBlockBrowser();
 	/** Switch to message page */
-    void gotoMessagePage();
+    void gotoFCPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */

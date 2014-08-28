@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = Fibre-qt
-VERSION = 1.2.0.2
+VERSION = 1.2.0.4
 INCLUDEPATH += src src/json \
     src/qt \
     src/tor \
